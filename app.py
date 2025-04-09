@@ -6,18 +6,20 @@ def main():
     st.title("News Sentiment Filter")
     st.write("This app filters the news based on the given sentiment")
 
-    # Slider für den Schwellenwert
-    threshold = st.slider("Choose a threshold", -1.0, 1.0, 0.0)
+    # Sliders for the filtering still to be used
+    positive = st.slider("Choose a threshold for positive values", -1.0, 1.0, 0.0)
+    neutral = st.slider("Choose a threshold for neutral values", -1.0, 1.0, 0.0)
+    negative = st.slider("Choose a threshold for negative values", -1.0, 1.0, 0.0)
 
-    # Button zum Abrufen der Nachrichten
+    # Button to start the scraping
     if st.button("Show news"):
-        # Nachrichten abrufen
+        # Get the stories
         texts = get_top_stories()
 
-        # Nachrichten filtern
-        filtered_texts = [text for text in texts if not too_negative(text, threshold)]
+        # Filter texts based on chosen thresholds
+        filtered_texts = [text for text in texts if not too_negative(text, positive)]
         
-        # Ergebnisse anzeigen
+        # Show results
         if filtered_texts:
             st.subheader("Filtered messages")
             for i, text in enumerate(filtered_texts):

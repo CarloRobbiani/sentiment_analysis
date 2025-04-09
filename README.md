@@ -3,8 +3,8 @@ This repository consists of python code that performs sentiment analysis on news
 
 ## Streamlit app
 
-To run the streamlit app locally on your browser run 
+To run the streamlit app locally in your browser run 
 
     python -m streamlit run app.py
 
-Currently the app provides a slider and a button with which you can show matching news articles.
+Currently the app provides a slider and a button with which you can show matching news articles. 
