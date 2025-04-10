@@ -1,31 +1,45 @@
 import streamlit as st
-from scraper import get_top_stories
+from scraper import get_top_stories_ny_times
 from sentiment import too_negative
+
+def display_articles(articles):
+    """ Displays the articles in a nice way.
+    Keyword arguments:
+    articles -- The articles from the NY Times api
+    """
+    for article in articles:
+        st.header(article["title"])
+        st.write(f"**By:** {article.get('byline', 'Unknown')} | **Source:** {article.get('section', 'Unknown')}")
+        st.write(article["abstract"])
+        # If there is a picture show the picture
+        if "multimedia" in article and article["multimedia"]:
+            st.image(article["multimedia"][0]["url"], caption=article["multimedia"][0]["caption"])
+        # Show a link to the original article
+        st.write(f"[Read more]({article['url']})")
+        st.markdown("---")
+
 
 def main():
     st.title("News Sentiment Filter")
     st.write("This app filters the news based on the given sentiment")
 
-    # Sliders for the filtering still to be used
-    positive = st.slider("Choose a threshold for positive values", -1.0, 1.0, 0.0)
-    neutral = st.slider("Choose a threshold for neutral values", -1.0, 1.0, 0.0)
-    negative = st.slider("Choose a threshold for negative values", -1.0, 1.0, 0.0)
+    # Settings sidebar with sliders
+    st.sidebar.header("Settings")
+    positive = st.sidebar.slider("Choose a threshold for positive values", -1.0, 1.0, 0.0)
+    neutral = st.sidebar.slider("Choose a threshold for neutral values", -1.0, 1.0, 0.0)
+    negative = st.sidebar.slider("Choose a threshold for negative values", -1.0, 1.0, 0.0)
+    
 
     # Button to start the scraping
     if st.button("Show news"):
         # Get the stories
-        texts = get_top_stories()
+        articles = get_top_stories_ny_times()
 
         # Filter texts based on chosen thresholds
-        filtered_texts = [text for text in texts if not too_negative(text, positive)]
+        filtered_texts = [text for text in articles if not too_negative(text["abstract"], positive)]
         
         # Show results
-        if filtered_texts:
-            st.subheader("Filtered messages")
-            for i, text in enumerate(filtered_texts):
-                st.write(f"{i + 1}. {text}")
-        else:
-            st.write("No messages match the criteria")
+        display_articles(filtered_texts)
 
 if __name__ == "__main__":
     main()

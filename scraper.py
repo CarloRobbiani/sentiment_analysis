@@ -5,27 +5,34 @@ import secret_key
 API_KEY = secret_key.API_KEY
 URL = f"https://api.nytimes.com/svc/topstories/v2/home.json?api-key={API_KEY}"
 
-def get_top_stories():
+def get_top_stories_ny_times(nr_articles = 15):
     """
     Use the New York Times api to get the top stories.
-    Return the abstracts as a list.
+    Return the articles as a list.
+    Keyword arguments:
+    nr_articles -- the number of articles to return
     """
     response = requests.get(URL)
     
     if response.status_code == 200:
         data = response.json()
         articles = data.get("results", [])
-        abstracts = []
+        # articles contain section, subsection, title, abstract, url
+        art = []
         
-        for i, article in enumerate(articles[:10], 1):  # Get top 10 stories
+        if len(articles) < nr_articles:
+            nr_articles = len(articles)
+        for i, article in enumerate(articles[:nr_articles], 1):  # Get top 10 stories
             """ print(f"{i}. {article['title']}")
             print(f"   {article['abstract']}")
             print(f"   {article['url']}\n") """
-            abstracts.append(article["abstract"])
+            art.append(article)
     else:
         print(f"Error: Unable to fetch news (Status Code: {response.status_code})")
-    return abstracts
+    return art
+
+
 
 if __name__ == "__main__":
-    get_top_stories()
+    get_top_stories_ny_times()
 
