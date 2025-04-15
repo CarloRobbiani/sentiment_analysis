@@ -8,6 +8,8 @@ def get_sentiment_score(text):
     """
     Take a string input and return its sentiment score.
     The score is a dictionary containing 'neg', 'neu', 'pos', and 'compound' scores.
+
+    :text: The text to calculate the sentiment on
     """
     sia = SentimentIntensityAnalyzer()
     sentiment = sia.polarity_scores(text)
@@ -16,7 +18,11 @@ def get_sentiment_score(text):
 def too_negative(text, threshold = -0.5):
     """
     Test if the text is too negative based on the specified threshold.
-    Return True if the text is too negative, False otherwise.
+
+    :text: The text to calculate the sentiment on
+    :threshold: The user specified threshold. Defaults to -0.5
+
+    :returns: True if the text is too negative, False otherwise.
     """
 
     score = get_sentiment_score(text)

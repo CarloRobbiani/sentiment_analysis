@@ -9,8 +9,8 @@ def get_top_stories_ny_times(nr_articles = 15):
     """
     Use the New York Times api to get the top stories.
     Return the articles as a list.
-    Keyword arguments:
-    nr_articles -- the number of articles to return
+
+    :nr_articles: the number of articles to return
     """
     response = requests.get(URL)
     

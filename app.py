@@ -4,8 +4,8 @@ from sentiment import too_negative
 
 def display_articles(articles):
     """ Displays the articles in a nice way.
-    Keyword arguments:
-    articles -- The articles from the NY Times api
+    
+    :articles: The articles from the NY Times api as a list
     """
     for article in articles:
         st.header(article["title"])
