@@ -40,7 +40,7 @@ def main():
         # Filter texts based on chosen thresholds
         #filtered_texts = [text for text in articles if not too_negative(text["abstract"], positive)]
         filtered_texts = [text for text in articles if fuzzy_membership(get_sentiment_score(text["abstract"])["compound"], 
-                                                                                 0.5,
+                                                                                 0.1,
                                                                                  very_neg, negative, positive, very_pos)]
         # Show results
         display_articles(filtered_texts)
