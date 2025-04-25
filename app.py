@@ -1,6 +1,7 @@
 import streamlit as st
 from scraper import get_top_stories_ny_times
-from sentiment import too_negative
+from sentiment import too_negative, get_sentiment_score
+from fuzzy import fuzzy_membership
 
 def display_articles(articles):
     """ Displays the articles in a nice way.
@@ -25,9 +26,10 @@ def main():
 
     # Settings sidebar with sliders
     st.sidebar.header("Settings")
-    positive = st.sidebar.slider("Choose a threshold for positive values", -1.0, 1.0, 0.0)
-    neutral = st.sidebar.slider("Choose a threshold for neutral values", -1.0, 1.0, 0.0)
-    negative = st.sidebar.slider("Choose a threshold for negative values", -1.0, 1.0, 0.0)
+    very_pos = st.sidebar.slider("Choose a threshold for very positive curve", -1.0, 1.0, 0.5)
+    positive = st.sidebar.slider("Choose a threshold for positive curve", -1.0, 1.0, 0.0)
+    very_neg = st.sidebar.slider("Choose a threshold for very_negative curve", -1.0, 1.0, 0.0)
+    negative = st.sidebar.slider("Choose a threshold for negative curve", -1.0, 1.0, -0.5)
     
 
     # Button to start the scraping
@@ -36,8 +38,10 @@ def main():
         articles = get_top_stories_ny_times()
 
         # Filter texts based on chosen thresholds
-        filtered_texts = [text for text in articles if not too_negative(text["abstract"], positive)]
-        
+        #filtered_texts = [text for text in articles if not too_negative(text["abstract"], positive)]
+        filtered_texts = [text for text in articles if fuzzy_membership(get_sentiment_score(text["abstract"])["compound"], 
+                                                                                 0.5,
+                                                                                 very_neg, negative, positive, very_pos)]
         # Show results
         display_articles(filtered_texts)
 

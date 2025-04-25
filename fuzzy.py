@@ -15,22 +15,26 @@ def sentiments(compound_score):
     return sentiments
 
 
-def fuzzy(compound_score, threshold):
+def fuzzy_membership(compound_score, threshold, very_neg=-0.5, neg=0, pos=0, very_pos=0.5):
     """Create a fuzzy membership using the trapezoidal function.
     Based on that create a method to filter out texts that are classified as too negative.
 
     :compound_score: The score from the vader lexicon
     :threshold: The user specified threshold
+    :very_neg: The adjustable falloff for the very negative curve
+    :neg: The adjustable falloff for the negative curve
+    :pos: The adjustable rise of the positive curve
+    :very_pos: The adjustable rise of the very positive curve
     """
     # Create universe of scores (-1 to 1)
     x_sentiment = np.arange(-1, 1.01, 0.01)
 
     # Fuzzy membership functions
-    very_neg = fuzz.trapmf(x_sentiment, [-1, -1, -0.75, -0.5])
-    neg = fuzz.trimf(x_sentiment, [-0.75, -0.5, 0])
+    very_neg = fuzz.trapmf(x_sentiment, [-1, -1, -0.75, very_neg])
+    neg = fuzz.trimf(x_sentiment, [-0.75, -0.5, neg])
     neutral = fuzz.trimf(x_sentiment, [-0.1, 0, 0.1])
-    pos = fuzz.trimf(x_sentiment, [0, 0.5, 0.75])
-    very_pos = fuzz.trapmf(x_sentiment, [0.5, 0.75, 1, 1])
+    pos = fuzz.trimf(x_sentiment, [pos, 0.5, 0.75])
+    very_pos = fuzz.trapmf(x_sentiment, [very_pos, 0.75, 1, 1])
 
     score = compound_score
 
@@ -50,10 +54,42 @@ def fuzzy(compound_score, threshold):
     fuzzy_negative = neg_score - pos_score  # A sort of balance metric
     if fuzzy_negative > threshold:
         print("Too negative")
+        return False
     else:
         print("Not too negative")
+        return True
+
+import matplotlib.pyplot as plt
+def plot_trapezoid():
+
+    # Define sentiment range from -1 to 1 with 0.01 resolution
+    x_sentiment = np.arange(-1, 1.01, 0.01)
+
+    # Create membership functions
+    very_neg = fuzz.trapmf(x_sentiment, [-1, -1, -0.75, -0.5])  # Full trapezoid left
+    neg = fuzz.trimf(x_sentiment, [-0.75, -0.5, 0])             # Triangular left
+    neutral = fuzz.trimf(x_sentiment, [-0.1, 0, 0.1])           # Narrow triangular center
+    pos = fuzz.trimf(x_sentiment, [0, 0.5, 0.75])               # Triangular right
+    very_pos = fuzz.trapmf(x_sentiment, [0.5, 0.75, 1, 1])     # Full trapezoid right
+
+    # Plot configuration
+    plt.figure(figsize=(10, 6))
+    plt.plot(x_sentiment, very_neg, label='Very Negative')
+    plt.plot(x_sentiment, neg, label='Negative')
+    plt.plot(x_sentiment, neutral, label='Neutral')
+    plt.plot(x_sentiment, pos, label='Positive')
+    plt.plot(x_sentiment, very_pos, label='Very Positive')
+
+    plt.title('Fuzzy Sentiment Membership Functions')
+    plt.xlabel('Sentiment Score')
+    plt.ylabel('Membership Degree')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
 
 
 
 if __name__=="__main__":
-    fuzzy(0.6)
+    #fuzzy(0.6)
+    plot_trapezoid()
