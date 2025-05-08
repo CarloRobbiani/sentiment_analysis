@@ -1,8 +1,9 @@
 import requests
-import secret_key
+import streamlit as st
+
 
 # Replace with your NYT API key
-API_KEY = secret_key.API_KEY
+API_KEY = st.secrets["api_keys"]["nyt_api_key"]
 URL = f"https://api.nytimes.com/svc/topstories/v2/home.json?api-key={API_KEY}"
 
 def get_top_stories_ny_times(nr_articles = 15):
