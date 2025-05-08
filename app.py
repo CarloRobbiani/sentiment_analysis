@@ -1,7 +1,9 @@
 import streamlit as st
 from scraper import get_top_stories_ny_times
 from sentiment import too_negative, get_sentiment_score
-from fuzzy import fuzzy_membership
+from fuzzy import fuzzy_membership, plot_trapezoid_app
+
+
 
 def display_articles(articles):
     """ Displays the articles in a nice way.
@@ -25,11 +27,15 @@ def main():
     st.write("This app filters the news based on the given sentiment")
 
     # Settings sidebar with sliders
-    st.sidebar.header("Settings")
+    st.sidebar.header("Settings", help="""Adjust the sliders to determine how much news get filtered put.
+                       Generally the more right a slider is, the more news get filtered out.""")
     very_pos = st.sidebar.slider("Choose a threshold for very positive curve", -1.0, 1.0, 0.5)
     positive = st.sidebar.slider("Choose a threshold for positive curve", -1.0, 1.0, 0.0)
-    very_neg = st.sidebar.slider("Choose a threshold for very_negative curve", -1.0, 1.0, 0.0)
-    negative = st.sidebar.slider("Choose a threshold for negative curve", -1.0, 1.0, -0.5)
+    negative = st.sidebar.slider("Choose a threshold for negative curve", -1.0, 1.0, 0.0)
+    very_neg = st.sidebar.slider("Choose a threshold for very_negative curve", -1.0, 1.0, -0.5)
+
+     # Plot the trapezoid membership functions in the sidebar
+    plot_trapezoid_app(very_neg, negative, positive, very_pos)
     
 
     # Button to start the scraping
