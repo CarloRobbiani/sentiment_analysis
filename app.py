@@ -12,7 +12,7 @@ def display_articles(articles):
     """
     for article in articles:
         st.header(article["title"])
-        st.write(f"**By:** {article.get('byline', 'Unknown')} | **Source:** {article.get('section', 'Unknown')}")
+        st.write(f"{article.get('byline', 'Unknown')} | **Source:** {article.get('section', 'Unknown')}")
         st.write(article["abstract"])
         # If there is a picture show the picture
         if "multimedia" in article and article["multimedia"]:
