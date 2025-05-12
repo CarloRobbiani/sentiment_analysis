@@ -30,9 +30,9 @@ def main():
     st.sidebar.header("Settings", help="""Adjust the sliders to determine how much news get filtered put.
                        Generally the more right a slider is, the more news get filtered out.""")
     very_pos = st.sidebar.slider("Choose a threshold for very positive curve", 0.3, 1.0, 0.5)
-    positive = st.sidebar.slider("Choose a threshold for positive curve", -1.0, 1.0, 0.0)
-    negative = st.sidebar.slider("Choose a threshold for negative curve", -1.0, 1.0, 0.0)
-    very_neg = st.sidebar.slider("Choose a threshold for very_negative curve", -1.0, 1.0, -0.5)
+    positive = st.sidebar.slider("Choose a threshold for positive curve", 0.0, 0.75, 0.25)
+    negative = st.sidebar.slider("Choose a threshold for negative curve", -0.75, 0.0, -0.25)
+    very_neg = st.sidebar.slider("Choose a threshold for very_negative curve", -1.0, -0.3, -0.5)
 
      # Plot the trapezoid membership functions in the sidebar
     plot_trapezoid_app(very_neg, negative, positive, very_pos)
