@@ -32,7 +32,7 @@ def main():
     very_pos = st.sidebar.slider("Choose a threshold for very positive curve", -1.0, 0.75, 0.5)
     positive = st.sidebar.slider("Choose a threshold for positive curve", -1.0, 0.5, 0.25)
     negative = st.sidebar.slider("Choose a threshold for negative curve", -0.5, 1.0, -0.25)
-    very_neg = st.sidebar.slider("Choose a threshold for very_negative curve", -1.0, 0.75, -0.5)
+    very_neg = st.sidebar.slider("Choose a threshold for very_negative curve", -0.75, 1.0, -0.5)
 
      # Plot the trapezoid membership functions in the sidebar
     plot_trapezoid_app(very_neg, negative, positive, very_pos)
