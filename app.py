@@ -10,16 +10,46 @@ def display_articles(articles):
     
     :articles: The articles from the NY Times api as a list
     """
+    # for article in articles:
+    #     st.header(article["title"])
+    #     st.write(f"{article.get('byline', 'Unknown')} | **Source:** {article.get('section', 'Unknown')}")
+    #     st.write(article["abstract"])
+    #     # If there is a picture show the picture
+    #     if "multimedia" in article and article["multimedia"]:
+    #         st.image(article["multimedia"][0]["url"], caption=article["multimedia"][0]["caption"])
+    #     # Show a link to the original article
+    #     st.write(f"[Read more]({article['url']})")
+    #     st.markdown("---")
     for article in articles:
         st.header(article["title"])
-        st.write(f"{article.get('byline', 'Unknown')} | **Source:** {article.get('section', 'Unknown')}")
+        byline = article.get("byline", "Unknown")
+        section = article.get("section", "Unknown")
+
+        # Extract fuzzy membership if available
+        membership = article.get("membership", {})
+        sentiment_tags = []
+        for key, label in [
+            ("very_neg", "Very Negative"),
+            ("neg", "Negative"),
+            ("neutral", "Neutral"),
+            ("pos", "Positive"),
+            ("very_pos", "Very Positive")
+        ]:
+            if membership.get(key, 0) > 0.2:  # Display only significant scores
+                sentiment_tags.append(label)
+
+        # Format sentiment as inline tags
+        sentiment_str = " | ".join(sentiment_tags) if sentiment_tags else "Neutral"
+
+        st.write(f"{byline} | **Source:** {section} | **Sentiment:** {sentiment_str}")
         st.write(article["abstract"])
-        # If there is a picture show the picture
+
         if "multimedia" in article and article["multimedia"]:
-            st.image(article["multimedia"][0]["url"], caption=article["multimedia"][0]["caption"])
-        # Show a link to the original article
+            st.image(article["multimedia"][0]["url"], caption=article["multimedia"][0].get("caption", ""))
+
         st.write(f"[Read more]({article['url']})")
         st.markdown("---")
+
 
 
 def main():
