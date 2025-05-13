@@ -66,7 +66,36 @@ def main():
 
      # Plot the trapezoid membership functions in the sidebar
     plot_trapezoid_app(very_neg, negative, positive, very_pos)
-    
+
+    positive_focus = (
+    very_pos > 0.5 and
+    positive > 0.25 and
+    negative > 0 and
+    very_neg > -0.25
+    )
+
+    negative_focus = (
+    very_neg < -0.5 and
+    negative < -0.25 and
+    positive < 0.0 and
+    very_pos < 0.25
+    )
+
+    if positive_focus and not negative_focus:
+        filter_mode = "Most Positive"
+    elif negative_focus and not positive_focus:
+        filter_mode = "Most Negative"
+    else:
+        filter_mode = "Balanced"
+
+    # Auto-adjust threshold
+    if filter_mode == "Most Positive":
+        threshold = 0.05
+    elif filter_mode == "Most Negative":
+        threshold = 1.0
+    else:
+        threshold = 0.1
+
 
     # Button to start the scraping
     if st.button("Show news"):
@@ -76,7 +105,7 @@ def main():
         # Filter texts based on chosen thresholds
         #filtered_texts = [text for text in articles if not too_negative(text["abstract"], positive)]
         filtered_texts = [text for text in articles if fuzzy_membership(get_sentiment_score(text["abstract"])["compound"], 
-                                                                                 0.1,
+                                                                                 threshold,
                                                                                  very_neg, negative, positive, very_pos)]
         # Show results
         display_articles(filtered_texts)
