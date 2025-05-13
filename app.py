@@ -35,7 +35,7 @@ def display_articles(articles):
             ("pos", "Positive"),
             ("very_pos", "Very Positive")
         ]:
-            if membership.get(key, 0) > 0.2:  # Display only significant scores
+            if membership.get(key, 0) > 0.1:  # Display only significant scores
                 sentiment_tags.append(label)
 
         # Format sentiment as inline tags
