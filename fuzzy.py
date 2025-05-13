@@ -55,10 +55,10 @@ def fuzzy_membership(compound_score, threshold, very_neg=-0.5, neg=0, pos=0, ver
     fuzzy_negative = neg_score - pos_score  # A sort of balance metric
     if fuzzy_negative > threshold:
         print("Too negative")
-        return False, membership
+        return False
     else:
         print("Not too negative")
-        return True, membership
+        return True
 
 import matplotlib.pyplot as plt
 def plot_trapezoid():
